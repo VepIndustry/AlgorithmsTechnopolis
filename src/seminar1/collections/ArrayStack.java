@@ -2,6 +2,7 @@ package seminar1.collections;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Stack;
 
 public class ArrayStack<Item> implements IStack<Item> {
 
@@ -24,7 +25,7 @@ public class ArrayStack<Item> implements IStack<Item> {
 
     @Override
     public Item pop() {
-        if (isEmpty()) throw new RuntimeException();
+        if (isEmpty()) throw new EmptyStackException();
         size--;
         if (size<elementData.length/4) shrink();
         return elementData[size];
@@ -72,5 +73,7 @@ public class ArrayStack<Item> implements IStack<Item> {
         }
 
     }
+
+    class EmptyStackException extends RuntimeException {}
 
 }
