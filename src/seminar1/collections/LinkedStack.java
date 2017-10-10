@@ -9,6 +9,7 @@ public class LinkedStack<Item> implements IStack<Item> {
 
     @Override
     public void push(Item item) {
+        if (item == null) throw new IllegalArgumentException();
         head = new Node<>(item,head);
         size++;
     }
@@ -38,7 +39,7 @@ public class LinkedStack<Item> implements IStack<Item> {
     }
 
     private class LinkedStackIterator implements Iterator<Item> {
-        Node<Item> currentNode =new Node<Item>(head.item,head);
+        Node<Item> currentNode = new Node<>(null, head);
 
         @Override
         public boolean hasNext() {
@@ -62,4 +63,6 @@ public class LinkedStack<Item> implements IStack<Item> {
             this.next = next;
         }
     }
+
+    class EmptyStackException extends RuntimeException {}
 }
