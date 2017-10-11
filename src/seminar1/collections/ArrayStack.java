@@ -73,7 +73,4 @@ public class ArrayStack<Item> implements IStack<Item> {
         }
 
     }
-
-    class EmptyStackException extends RuntimeException {}
-
 }

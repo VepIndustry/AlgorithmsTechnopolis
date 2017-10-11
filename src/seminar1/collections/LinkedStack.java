@@ -63,6 +63,8 @@ public class LinkedStack<Item> implements IStack<Item> {
             this.next = next;
         }
     }
+}
 
-    class EmptyStackException extends RuntimeException {}
+class EmptyStackException extends RuntimeException {
+
 }
