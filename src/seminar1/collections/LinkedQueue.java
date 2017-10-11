@@ -11,13 +11,45 @@ public class LinkedQueue<Item> implements IQueue<Item> {
 
     @Override
     public void enqueue(Item item) {
-        /* TODO: implement it */
+        switch (size) {
+        default:
+            tail = new Node<Item>(item, tail);
+            break;
+        case 0:
+            head = new Node<Item>(item, null);
+            break;
+        case 1:
+            tail = new Node<Item>(item, head);
+            break;
+        }
+        size++;
     }
 
     @Override
     public Item dequeue() {
-        /* TODO: implement it */
-        return null;
+        switch (size) {
+        default:
+            Node<Item> preHead = null, curNode = tail;
+
+            while (preHead == null) {
+                if (curNode.next == head) {
+                    preHead = curNode;
+                } else {
+                    curNode = curNode.next;
+                }
+            }
+
+            preHead.next = null;
+            Item result = head.item;
+            head = preHead;
+            return result;
+        case 1:
+        case 2:
+            size--;
+            return head.item;
+        case 0:
+            throw new RuntimeException();
+        }
     }
 
     @Override
@@ -36,17 +68,17 @@ public class LinkedQueue<Item> implements IQueue<Item> {
     }
 
     private class LinkedQueueIterator implements Iterator<Item> {
+        private Node<Item> node = tail;
 
         @Override
         public boolean hasNext() {
-            /* TODO: implement it */
-            return false;
+            return node.next != null;
         }
 
         @Override
         public Item next() {
-            /* TODO: implement it */
-            return null;
+            node = node.next;
+            return node.item;
         }
 
     }
