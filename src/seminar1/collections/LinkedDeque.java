@@ -8,32 +8,51 @@ public class LinkedDeque<Item> implements IDeque<Item> {
     private Node<Item> tail;
     private int size;
 
+    public LinkedDeque() {
+        head = new Node<Item>(null);
+        tail = new Node<Item>(null);
+        head.next = tail;
+        tail.prev = head;
+    }
+
     @Override
     public void pushFront(Item item) {
-        head = new Node<Item>(item, null, head);
-        head.next.prev = head;
+        Node<Item> node = new Node<Item>(item, head, head.next);
+        head.next = node;
+        node.next.prev = node;
         size++;
     }
 
     @Override
     public void pushBack(Item item) {
-        tail = new Node<Item>(item, tail, null);
-        tail.prev.next = tail;
+        Node<Item> node = new Node<Item>(item, tail.prev, tail);
+        tail.prev = node;
+        node.prev.next = node;
+
         size++;
     }
 
     @Override
     public Item popFront() {
-        head = head.next;
+        Node<Item> current = head.next;
+        Node<Item> next = current.next;
+        head.next = next;
+        next.prev = head;
+
         size--;
-        return head.prev.item;
+        return current.item;
     }
 
     @Override
     public Item popBack() {
-        tail = tail.prev;
+        Node<Item> current = tail.prev;
+        Node<Item> prev = current.prev;
+
+        prev.next = tail;
+        tail.prev = prev;
+
         size--;
-        return tail.next.item;
+        return current.item;
     }
 
     @Override
@@ -52,11 +71,11 @@ public class LinkedDeque<Item> implements IDeque<Item> {
     }
 
     private class LinkedQueueIterator implements Iterator<Item> {
-        private Node<Item> node = new Node<Item>(null, null, head);
+        private Node<Item> node = head;
 
         @Override
         public boolean hasNext() {
-            return node != tail;
+            return node.next != tail;
         }
 
         @Override
@@ -64,7 +83,6 @@ public class LinkedDeque<Item> implements IDeque<Item> {
             node = node.next;
             return node.item;
         }
-
     }
 
     private static class Node<Item> {
