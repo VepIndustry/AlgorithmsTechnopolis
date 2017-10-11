@@ -45,15 +45,30 @@ public class TwoStackQueue<Item> implements IQueue<Item> {
     }
 
     private class TwoStackIterator implements Iterator<Item> {
+        private IQueue<Item> queue = new LinkedQueue<>();
+
+        public TwoStackIterator() {
+            for (Item item : stack2) {
+                queue.enqueue(item);
+            }
+
+            IStack<Item> buffer = new ArrayStack<>();
+            for (Item item : stack1) {
+                buffer.push(item);
+            }
+            for (Item item : buffer) {
+                queue.enqueue(item);
+            }
+        }
 
         @Override
         public boolean hasNext() {
-            return !isEmpty();
+            return !queue.isEmpty();
         }
 
         @Override
         public Item next() {
-            return dequeue();
+            return queue.dequeue();
         }
 
     }
