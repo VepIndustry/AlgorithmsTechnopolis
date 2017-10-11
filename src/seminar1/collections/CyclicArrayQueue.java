@@ -49,9 +49,9 @@ public class CyclicArrayQueue<Item> implements IQueue<Item> {
         return size;
     }
 
-    private void fill(Item[] newArray) {
-        if (start < end) {
-            newArray = Arrays.copyOf(elementData, newArray.length);
+    private Item[] fill(Item[] newArray) {
+        if (start <= end) {
+            return Arrays.copyOf(Arrays.copyOfRange(elementData, start, end), newArray.length);
         } else {
             //Создаём массив нужных нам размеров и переносим всё туда, стоит учитывать что перенос будет со старыми значениями
             //start и end
@@ -63,6 +63,7 @@ public class CyclicArrayQueue<Item> implements IQueue<Item> {
             for (int i = 0; i < end; i++, j++) {
                 newArray[j] = elementData[i];
             }
+            return newArray;
         }
     }
 
@@ -78,8 +79,7 @@ public class CyclicArrayQueue<Item> implements IQueue<Item> {
     @SuppressWarnings("unchecked")
     private void changeSize(int newSize) {
         Item[] newArray = (Item[]) new Object[newSize];
-        fill(newArray);
-        elementData = newArray;
+        elementData = fill(newArray);
         start = 0;
         end = size;
     }
