@@ -5,51 +5,33 @@ import java.util.Iterator;
 public class LinkedQueue<Item> implements IQueue<Item> {
 
     // -> [tail -> .. -> .. -> head] ->
-    private Node<Item> head;
-    private Node<Item> tail;
+    private Node<Item> head = new Node<Item>(null, null); // Указывает на элемент за областью данных
+    private Node<Item> tail = new Node<Item>(null, head);
     private int size;
 
     @Override
     public void enqueue(Item item) {
-        switch (size) {
-        default:
-            tail = new Node<Item>(item, tail);
-            break;
-        case 0:
-            head = new Node<Item>(item, null);
-            break;
-        case 1:
-            tail = new Node<Item>(item, head);
-            break;
-        }
+        Node<Item> newNode = new Node<Item>(item);
+        newNode.next = tail.next;
+        tail.next = newNode;
+
         size++;
     }
 
     @Override
     public Item dequeue() {
-        switch (size) {
-        default:
-            Node<Item> preHead = null, curNode = tail;
-
-            while (preHead == null) {
-                if (curNode.next == head) {
-                    preHead = curNode;
-                } else {
-                    curNode = curNode.next;
-                }
-            }
-
-            preHead.next = null;
-            Item result = head.item;
-            head = preHead;
-            return result;
-        case 1:
-        case 2:
-            size--;
-            return head.item;
-        case 0:
-            throw new RuntimeException();
+        if (isEmpty()) {
+            throw new EmptyStackException();
         }
+
+        Node<Item> preHead = tail, node = tail;
+        while(node.next != head) {
+            preHead = node;
+            node = node.next;
+        }
+
+        preHead.next = head;
+        return node.item;
     }
 
     @Override
@@ -68,18 +50,23 @@ public class LinkedQueue<Item> implements IQueue<Item> {
     }
 
     private class LinkedQueueIterator implements Iterator<Item> {
-        private Node<Item> node = tail;
+        private Node<Item> node = head;
 
         @Override
         public boolean hasNext() {
-            return node != null;
+            return node != tail.next;
         }
 
         @Override
         public Item next() {
-            Item result = node.item;
-            node = node.next;
-            return result;
+            if (node == tail) return null;
+            Node<Item> curNode = tail;
+            while(curNode.next != node) {
+                curNode = curNode.next;
+            }
+
+            node = curNode;
+            return node == tail ? null : node.item;
         }
 
     }
