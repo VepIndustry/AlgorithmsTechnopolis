@@ -49,7 +49,7 @@ public class Solver {
 
             //Выделяем левую и правую части и вызываем для них evaluate
             double left = evaluate(Arrays.copyOfRange(values, 1, position));
-            double right = evaluate(Arrays.copyOfRange(values, position + 1, values.length));
+            double right = evaluate(Arrays.copyOfRange(values, position + 1, values.length - 1));
 
             switch (values[position].charAt(0)) {
             case PLUS : return left + right;
