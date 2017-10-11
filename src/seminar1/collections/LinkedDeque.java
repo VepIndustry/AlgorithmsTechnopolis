@@ -4,43 +4,82 @@ import java.util.Iterator;
 
 public class LinkedDeque<Item> implements IDeque<Item> {
 
+    private Node<Item> head;
+    private Node<Item> tail;
+    private int size;
+
     @Override
     public void pushFront(Item item) {
-        /* TODO: implement it */
+        head = new Node<Item>(item, null, head);
+        head.next.prev = head;
+        size++;
     }
 
     @Override
     public void pushBack(Item item) {
-        /* TODO: implement it */
+        tail = new Node<Item>(item, tail, null);
+        tail.prev.next = tail;
+        size++;
     }
 
     @Override
     public Item popFront() {
-        /* TODO: implement it */
-        return null;
+        head = head.next;
+        size--;
+        return head.prev.item;
     }
 
     @Override
     public Item popBack() {
-        /* TODO: implement it */
-        return null;
+        tail = tail.prev;
+        size--;
+        return tail.next.item;
     }
 
     @Override
     public boolean isEmpty() {
-        /* TODO: implement it */
-        return false;
+        return size == 0;
     }
 
     @Override
     public int size() {
-        /* TODO: implement it */
-        return 0;
+        return size;
     }
 
     @Override
     public Iterator<Item> iterator() {
-        /* TODO: implement it */
-        return null;
+        return new LinkedQueueIterator();
+    }
+
+    private class LinkedQueueIterator implements Iterator<Item> {
+        private Node<Item> node = new Node<Item>(null, null, head);
+
+        @Override
+        public boolean hasNext() {
+            return node != tail;
+        }
+
+        @Override
+        public Item next() {
+            node = node.next;
+            return node.item;
+        }
+
+    }
+
+    private static class Node<Item> {
+        Item item;
+        Node<Item> next;
+        Node<Item> prev;
+
+        public Node(Item item) {
+            this.item = item;
+        }
+
+        public Node(Item item, Node<Item> prev, Node<Item> next) {
+            this.item = item;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
