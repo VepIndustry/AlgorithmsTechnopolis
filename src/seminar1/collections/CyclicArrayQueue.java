@@ -50,7 +50,8 @@ public class CyclicArrayQueue<Item> implements IQueue<Item> {
     }
 
     private Item[] fill(Item[] newArray) {
-        if (start <= end) {
+        if (size == 0) return newArray;
+        if (start < end) {
             return Arrays.copyOf(Arrays.copyOfRange(elementData, start, end), newArray.length);
         } else {
             //Создаём массив нужных нам размеров и переносим всё туда, стоит учитывать что перенос будет со старыми значениями
