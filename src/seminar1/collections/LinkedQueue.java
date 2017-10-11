@@ -31,6 +31,7 @@ public class LinkedQueue<Item> implements IQueue<Item> {
         }
 
         preHead.next = head;
+        size--;
         return node.item;
     }
 
