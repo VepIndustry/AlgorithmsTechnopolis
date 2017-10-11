@@ -1,64 +1,130 @@
 package seminar1.collections;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class CyclicArrayDeque<Item> implements IDeque<Item> {
 
     private Item[] elementData;
+    private int start = 0, end = 0, size = 0;
+
+
+    private static final int DEFAULT_CAPACITY = 10;
+
+    @SuppressWarnings("unchecked")
+    public CyclicArrayDeque() {
+        this.elementData = (Item[]) new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void pushFront(Item item) {
-        /* TODO: implement it */
+        start = start == 0 ? elementData.length - 1 : start - 1;
+        elementData[start] = item;
+        size++;
+        if (size == elementData.length) {
+            grow();
+        }
     }
 
     @Override
     public void pushBack(Item item) {
-        /* TODO: implement it */
+        elementData[end] = item;
+        size++;
+        end++;
+        if (size == elementData.length) {
+            grow();
+        } else {
+            end = end == elementData.length ? 0 : end;
+        }
     }
 
     @Override
     public Item popFront() {
-        /* TODO: implement it */
-        return null;
+        Item result = elementData[start];
+        size--;
+        start = start == elementData.length - 1 ? 0 : start + 1;
+        if (size < elementData.length / 4) {
+            shrink();
+        }
+        return result;
     }
 
     @Override
     public Item popBack() {
-        /* TODO: implement it */
-        return null;
+        end = end == 0 ? elementData.length - 1 : end - 1;
+        Item result = elementData[end];
+        size--;
+        if (size < elementData.length / 4) {
+            shrink();
+        }
+        return result;
     }
 
     @Override
     public boolean isEmpty() {
-        /* TODO: implement it */
-        return false;
+        return size == 0;
     }
 
     @Override
     public int size() {
-        /* TODO: implement it */
-        return 0;
+        return size;
     }
 
+    private void fill(Item[] newArray) {
+        if (start < end) {
+            newArray = Arrays.copyOf(elementData, newArray.length);
+        } else {
+            //Создаём массив нужных нам размеров и переносим всё туда, стоит учитывать что перенос будет со старыми значениями
+            //start и end
+            int j = 0;
+            for (int i = start; i < elementData.length; i++, j++) {
+                newArray[j] = elementData[i];
+            }
+
+            for (int i = 0; i < end; i++, j++) {
+                newArray[j] = elementData[i];
+            }
+        }
+    }
+
+
     private void grow() {
-        /**
-         * TODO: implement it
-         * Если массив заполнился,
-         * то увеличить его размер в полтора раз
-         */
+        changeSize((int) (elementData.length * 1.5));
     }
 
     private void shrink() {
-        /**
-         * TODO: implement it
-         * Если количество элементов в четыре раза меньше,
-         * то уменьшить его размер в два раза
-         */
+        changeSize(elementData.length / 2);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void changeSize(int newSize) {
+        Item[] newArray = (Item[]) new Object[newSize];
+        fill(newArray);
+        elementData = newArray;
+        start = 0;
+        end = size;
     }
 
     @Override
     public Iterator<Item> iterator() {
-        /* TODO: implement it */
-        return null;
+        return new CyclicArrayDequeIterator();
+    }
+
+    private class CyclicArrayDequeIterator implements Iterator<Item> {
+
+        private int currentPosition = start;
+
+        @Override
+        public boolean hasNext() {
+            return currentPosition != end;
+        }
+
+        @Override
+        public Item next() {
+            Item result = elementData[currentPosition];
+            currentPosition = currentPosition == elementData.length - 1 ? 0 : currentPosition + 1;
+            return result;
+        }
+
     }
 }

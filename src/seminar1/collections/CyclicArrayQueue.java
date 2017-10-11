@@ -23,9 +23,9 @@ public class CyclicArrayQueue<Item> implements IQueue<Item> {
         end++;
         if (size == elementData.length) {
             grow();
+        } else {
+            end = end == elementData.length ? 0 : end;
         }
-
-        end = end == elementData.length ? 0 : end;
     }
 
     @Override
@@ -36,7 +36,6 @@ public class CyclicArrayQueue<Item> implements IQueue<Item> {
         if (size < elementData.length / 4) {
             shrink();
         }
-
         return result;
     }
 
