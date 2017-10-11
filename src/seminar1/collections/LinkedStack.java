@@ -9,7 +9,6 @@ public class LinkedStack<Item> implements IStack<Item> {
 
     @Override
     public void push(Item item) {
-        if (item == null) throw new IllegalArgumentException();
         head = new Node<>(item,head);
         size++;
     }
