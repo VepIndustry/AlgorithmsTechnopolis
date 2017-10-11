@@ -15,7 +15,7 @@ public class LinkedStack<Item> implements IStack<Item> {
 
     @Override
     public Item pop() {
-        if (isEmpty()) throw new RuntimeException();
+        if (isEmpty()) throw new EmptyStackException();
         Item tmp = head.item;
         head=head.next;
         size--;

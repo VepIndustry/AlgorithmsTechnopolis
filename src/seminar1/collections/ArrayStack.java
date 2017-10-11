@@ -18,16 +18,22 @@ public class ArrayStack<Item> implements IStack<Item> {
 
     @Override
     public void push(Item item) {
-        elementData[size]=item;
+        elementData[size] = item;
         size++;
-        if (size==elementData.length) grow();
+        if (size == elementData.length) {
+            grow();
+        }
     }
 
     @Override
     public Item pop() {
-        if (isEmpty()) throw new EmptyStackException();
+        if (isEmpty()) {
+            throw new EmptyStackException();
+        }
         size--;
-        if (size<elementData.length/4) shrink();
+        if (size < elementData.length / 4) {
+            shrink();
+        }
         return elementData[size];
     }
 
@@ -46,7 +52,7 @@ public class ArrayStack<Item> implements IStack<Item> {
     }
 
     private void shrink() {
-        changeCapacity(elementData.length/2);
+        changeCapacity(elementData.length / 2);
     }
 
     private void changeCapacity(int newCapacity) {
