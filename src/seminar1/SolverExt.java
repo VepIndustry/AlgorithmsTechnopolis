@@ -47,16 +47,16 @@ public class SolverExt {
                 break;
             case PLUS:
             case MINUS:
-                if (curPriority > depth * 2) {
+                if (curPriority > depth * times) {
                     index = i;
-                    curPriority = depth * 2;
+                    curPriority = depth * times;
                 }
                 break;
             case TIMES:
             case DIVISION:
-                if (curPriority > depth * 2 + 1) {
+                if (curPriority > depth * times + 1) {
                     index = i;
-                    curPriority = depth * 2 + 1;
+                    curPriority = depth * times + 1;
                 }
                 break;
             }
@@ -90,6 +90,9 @@ public class SolverExt {
     }
 
     private static double evaluate(String[] values) {
+
+        if (values.length == 0) return 0.0;
+
         //Можно получить всё выражение в скобках, которые нужно убрать
         values = deleteBraces(values);
 
