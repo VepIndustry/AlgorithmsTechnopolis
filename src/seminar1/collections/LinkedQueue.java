@@ -72,13 +72,14 @@ public class LinkedQueue<Item> implements IQueue<Item> {
 
         @Override
         public boolean hasNext() {
-            return node.next != null;
+            return node != null;
         }
 
         @Override
         public Item next() {
+            Item result = node.item;
             node = node.next;
-            return node.item;
+            return result;
         }
 
     }
