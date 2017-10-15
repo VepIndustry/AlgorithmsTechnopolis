@@ -6,26 +6,30 @@ import java.util.Iterator;
 
 public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorityQueue<Key> {
 
-    private Object[] elementData;
+    private Key[] elementData;
     private Comparator comparator;
     private int end = 0;
     private static final int DEFAULT_CAPACITY = 10;
 
     @SuppressWarnings("unchecked")
     public ArrayPriorityQueue() {
-        this.elementData = new Object[DEFAULT_CAPACITY];
+        this.elementData = (Key[])new Comparable[DEFAULT_CAPACITY];
     }
 
     @SuppressWarnings("unchecked")
     public ArrayPriorityQueue(Comparator<Key> comparator) {
-        this.elementData = new Object[DEFAULT_CAPACITY];
+        this.elementData = (Key[])new Comparable[DEFAULT_CAPACITY];
         this.comparator = comparator;
     }
 
+    @SuppressWarnings("unchecked")
     private ArrayPriorityQueue(ArrayPriorityQueue queue) {
-        this.elementData = queue.elementData;
-        this.comparator = queue.comparator;
-        this.end = queue.end;
+        this.elementData = (Key[]) new Comparable[queue.end];
+        for (int i = 0;i<elementData.length;i++) {
+            this.elementData[i]=(Key)queue.elementData[i];
+        }
+        this.comparator = (Comparator<Key>) queue.comparator;
+        this.end = queue.size();
     }
 
 
@@ -37,16 +41,15 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
         siftUp();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Key peek() {
-        return (Key)elementData[0];
+        return elementData[0];
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Key extractMin() {
-        Key result = (Key)elementData[0];
+        if (isEmpty()) return null;
+        Key result = elementData[0];
         end--;
         elementData[0] = elementData[end];
 
@@ -66,7 +69,6 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
         return end;
     }
 
-    @SuppressWarnings("unchecked")
     private void siftUp() {
         //Корень всего - самый маленький элемент
         //поднимаем элемент в самом конце массива
@@ -74,7 +76,7 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
         int parent = (element + 1) / 2 - 1;
         while(true) {
             if (element != 0 && greater(parent, element)) {
-                Key buf = (Key)elementData[element];
+                Key buf = elementData[element];
                 elementData[element] = elementData[parent];
                 elementData[parent] = buf;
                 element = parent;
@@ -85,7 +87,6 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void siftDown() {
         //Опускаем вниз начиная в корня если он больше чем сыновья
         int leftChild = 1;
@@ -105,7 +106,7 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
                 break;
             }
 
-            Key buffer = (Key)elementData[smallestChild];
+            Key buffer = elementData[smallestChild];
             elementData[smallestChild] = elementData[parent];
             elementData[parent] = buffer;
             parent = smallestChild;
@@ -142,7 +143,7 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
     private class ArrayPriorityQueueIterator implements Iterator<Key> {
 
         @SuppressWarnings("unchecked")
-        private ArrayPriorityQueue queue = new ArrayPriorityQueue<Key>(ArrayPriorityQueue.this);
+        private ArrayPriorityQueue<Key> queue = new ArrayPriorityQueue<Key>(ArrayPriorityQueue.this);
 
         @Override
         public boolean hasNext() {
@@ -152,7 +153,7 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
         @Override
         @SuppressWarnings("unchecked")
         public Key next() {
-            return (Key)queue.extractMin();
+            return queue.extractMin();
         }
 
     }
